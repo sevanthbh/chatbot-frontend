@@ -16,7 +16,7 @@ function handleAuth() {
         return;
     }
 
-    fetch(`http://127.0.0.1:5000/${isLoginMode ? 'login' : 'signup'}`, {
+    fetch(`https://ai-chatbot-backend-rwco.onrender.com/${isLoginMode ? 'login' : 'signup'}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
@@ -58,7 +58,7 @@ function generateContent() {
 
     chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: "smooth" });
 
-    fetch("http://127.0.0.1:5000/chat", {
+    fetch("https://ai-chatbot-backend-rwco.onrender.com/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_message: prompt })  
