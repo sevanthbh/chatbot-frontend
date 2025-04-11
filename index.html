@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Inline futuristic style additions (add to style.css if needed) */
+        body {
+            background: #0f0f0f;
+            font-family: 'Segoe UI', sans-serif;
+            color: #fff;
+        }
+
+        .auth-container {
+    max-width: 400px;
+    margin: auto;
+    margin-top: 40px;
+    padding: 20px;
+    background: #1c1c1c;
+    border-radius: 16px;
+    box-shadow: 0 0 15px rgba(0,255,255,0.2);
+}
+
+.chat-container {
+    width: 90%;
+    max-width: 1000px;
+    height: 85vh;
+    margin: 40px auto;
+    padding: 20px;
+    background: #1c1c1c;
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(0,255,255,0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+        .auth-container h2 {
+            text-align: center;
+            color: #00fff7;
+        }
+
+        .auth-container input, .auth-container button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .auth-container input {
+            background: #2c2c2c;
+            color: #fff;
+        }
+
+        .auth-container button {
+            background: #00fff7;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 10px;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .chat-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    padding: 15px 20px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    backdrop-filter: blur(12px);
+    background: linear-gradient(135deg, #0088ff, #00ffcc);
+    color: #0f0f0f;
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Auth Forms -->
+    <div class="auth-container" id="auth-section">
+        <h2 id="auth-title">Login</h2>
+        <input type="email" id="auth-email" placeholder="Email">
+        <input type="password" id="auth-password" placeholder="Password">
+        <button onclick="handleAuth()">Login</button>
+        <div class="auth-toggle" onclick="toggleAuth()">Don't have an account? <span id="toggle-text">Signup</span></div>
+    </div>
+
+    <!-- Chat Section -->
+    <div class="chat-container hidden" id="chat-section">
+        <h1><div class="chat-title">🤖 AI ASSISTANT 🤖 </div></h1>
+
+        <!-- Chat Box -->
+        <div class="chat-box" id="chat-box"></div>
+
+        <!-- Input Area -->
+        <div class="input-container">
+            <input type="text" id="prompt" placeholder="Type your message..." onkeypress="handleEnter(event)">
+            <button id="send-btn" onclick="generateContent()">➤</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
