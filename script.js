@@ -71,6 +71,9 @@ function generateContent() {
         .then(data => {
             if (data.image_base64) {
                 botMessage.innerHTML = `<span>🖼️ Image Generated:</span><br><img src="data:image/png;base64,${data.image_base64}" class="generated-img" style="margin-top: 10px; max-width: 100%; border-radius: 10px;">`;
+            } else if (data.image_url) {
+                // Fallback to using image URL if available
+                botMessage.innerHTML = `<span>🖼️ Image Generated:</span><br><img src="${data.image_url}" class="generated-img" style="margin-top: 10px; max-width: 100%; border-radius: 10px;">`;
             } else {
                 botMessage.innerHTML = `<span class="error">❌ No image generated.</span>`;
             }
@@ -119,8 +122,7 @@ function generateContent() {
     }
 
     document.getElementById("prompt").value = "";
-}
-
+}  
 
 document.getElementById("prompt").addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
