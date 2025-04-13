@@ -39,7 +39,6 @@ function generateContent() {
     let prompt = document.getElementById("prompt").value.trim();
     let chatBox = document.getElementById("chat-box");
     let sendBtn = document.getElementById("send-btn");
-    let imageOutput = document.getElementById("generated-image");
 
     if (!prompt) return;
 
@@ -59,46 +58,43 @@ function generateContent() {
 
     chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: "smooth" });
 
-    // 🔁 Image Prompt Handling
-    if (prompt.toLowerCase().startsWith("image:")) {
-        const imagePrompt = prompt.substring(6).trim();
+    // Check if the prompt is asking for an image
+    const isImagePrompt = /image|photo|picture|generate.*image/i.test(prompt);
 
-        fetch("http://localhost:5000/api/generate-image", {
+    if (isImagePrompt) {
+        // IMAGE MODE
+        fetch("https://ai-chatbot-backend-rwco.onrender.com/api/generate-image", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt: imagePrompt, size: "512x512" })
+            body: JSON.stringify({ prompt: prompt })
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
-            if (data.image_base64) {
-                botMessage.innerHTML = "<span>🖼️ Image generated below:</span>";
-                imageOutput.src = data.image_base64;
-                imageOutput.style.display = "block";
-            } else {
-                botMessage.innerHTML = `<span class="error">❌ Failed to generate image!</span>`;
-            }
+            botMessage.innerHTML = `🖼️ Image Generated:`;
+            document.getElementById("generated-image").src = `data:image/png;base64,${data.image_base64}`;
+            document.getElementById("generated-image").style.display = "block";
+
+            sendBtn.innerHTML = "➤";  
+            sendBtn.classList.remove("loading");  
+            sendBtn.disabled = false;
         })
         .catch(error => {
-            botMessage.innerHTML = `<span class="error">❌ Image API error!</span>`;
-        })
-        .finally(() => {
+            botMessage.innerHTML = `<span class="error">❌ Image API failed!</span>`;
             sendBtn.innerHTML = "➤";  
             sendBtn.classList.remove("loading");  
             sendBtn.disabled = false;
         });
-    } 
-    
-    // 🧠 Normal Chat Response
-    else {
+    } else {
+        // TEXT MODE
         fetch("https://ai-chatbot-backend-rwco.onrender.com/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ user_message: prompt })  
+            body: JSON.stringify({ user_message: prompt })
         })
         .then(response => response.json())
         .then(data => {
             let generatedText = data.bot_response || "🤖 No response received!";
-            botMessage.innerHTML = "";
+            botMessage.innerHTML = "";  
 
             let index = 0;
             function type() {
@@ -115,7 +111,7 @@ function generateContent() {
             setTimeout(type, 800);
         })
         .catch(error => {
-            botMessage.innerHTML = `<span class="error">❌ Chat API error!</span>`;
+            botMessage.innerHTML = `<span class="error">❌ Text API failed!</span>`;
             sendBtn.innerHTML = "➤";  
             sendBtn.classList.remove("loading");  
             sendBtn.disabled = false;
@@ -124,6 +120,7 @@ function generateContent() {
 
     document.getElementById("prompt").value = ""; 
 }
+
 
 document.getElementById("prompt").addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
