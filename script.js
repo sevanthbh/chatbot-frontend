@@ -58,21 +58,22 @@ function generateContent() {
 
     chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: "smooth" });
 
-    // Check if the prompt is asking for an image
+    // Check if prompt is asking for image
     const isImagePrompt = /image|photo|picture|generate.*image/i.test(prompt);
 
     if (isImagePrompt) {
-        // IMAGE MODE
-        fetch("https://ai-chatbot-backend-rwco.onrender.com/api/generate-image", {
+        fetch("https://ai-chatbot-backend-rwco.onrender.com/generate-image", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt: prompt })
         })
         .then(res => res.json())
         .then(data => {
-            botMessage.innerHTML = `🖼️ Image Generated:`;
-            document.getElementById("generated-image").src = `data:image/png;base64,${data.image_base64}`;
-            document.getElementById("generated-image").style.display = "block";
+            if (data.image_base64) {
+                botMessage.innerHTML = `<span>🖼️ Image Generated:</span><br><img src="data:image/png;base64,${data.image_base64}" class="generated-img" style="margin-top: 10px; max-width: 100%; border-radius: 10px;">`;
+            } else {
+                botMessage.innerHTML = `<span class="error">❌ No image generated.</span>`;
+            }
 
             sendBtn.innerHTML = "➤";  
             sendBtn.classList.remove("loading");  
@@ -85,7 +86,6 @@ function generateContent() {
             sendBtn.disabled = false;
         });
     } else {
-        // TEXT MODE
         fetch("https://ai-chatbot-backend-rwco.onrender.com/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -94,7 +94,7 @@ function generateContent() {
         .then(response => response.json())
         .then(data => {
             let generatedText = data.bot_response || "🤖 No response received!";
-            botMessage.innerHTML = "";  
+            botMessage.innerHTML = "";
 
             let index = 0;
             function type() {
@@ -118,7 +118,7 @@ function generateContent() {
         });
     }
 
-    document.getElementById("prompt").value = ""; 
+    document.getElementById("prompt").value = "";
 }
 
 
